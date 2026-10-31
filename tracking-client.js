@@ -3,10 +3,10 @@ export async function createTrackingClient(report=()=>{},forceMain=false,maxHand
  // A loaded page can remain visible after its local server has exited.
  // Check transport before blaming Worker support or requesting camera access.
  report('正在检查本地剧场服务与手势资源…');
- const resources=['health','vendor/vision_bundle.mjs','tracking-worker.js','vendor/hand_landmarker.task','vendor/wasm/vision_wasm_internal.js','vendor/wasm/vision_wasm_internal.wasm','vendor/wasm/vision_wasm_nosimd_internal.js','vendor/wasm/vision_wasm_nosimd_internal.wasm'];
+ const resources=['vendor/vision_bundle.mjs','tracking-worker.js','vendor/hand_landmarker.task','vendor/wasm/vision_wasm_internal.js','vendor/wasm/vision_wasm_internal.wasm','vendor/wasm/vision_wasm_nosimd_internal.js','vendor/wasm/vision_wasm_nosimd_internal.wasm'];
  for(const resource of resources){
   let response;const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),6000);
-  try{response=await fetch(new URL('./'+resource,location.href),{method:resource==='health'?'GET':'HEAD',cache:'no-store',signal:abort.signal});}
+  try{response=await fetch(new URL('./'+resource,location.href),{method:'HEAD',cache:'no-store',signal:abort.signal});}
   catch{throw new Error('本地剧场服务未连接或已停止。请重新双击 ASCII风格副本中的「启动ASCII皮影剧场.cmd」，然后按 Ctrl+F5 刷新页面再开启摄像头。当前无法访问：'+resource);}
   finally{clearTimeout(timeout);}
   if(!response.ok)throw new Error('本地手势资源缺失或无法读取：'+resource+'（HTTP '+response.status+'）。请重新启动 ASCII 副本；若仍失败，请运行模型诊断。');
